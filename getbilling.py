@@ -10,6 +10,7 @@ cloudwatch = boto3.resource('cloudwatch')
 metric = cloudwatch.Metric('AWS/Billing','EstimatedCharges')
 
 url = os.environ["WEBHOOK_URL"]
+channel_name = '#test_01'
 
 d = datetime.today() - timedelta(days=1)
 start_time = datetime(d.year, d.month, d.day, 0, 0, 0)
@@ -38,7 +39,7 @@ payload_dic = {
     "text":content,
     "username":'AWS Monthly Billing',
     "icon_emoji":':dollar:',
-    "channel":'#test_01',
+    "channel":channel_name,
     }
 
 if __name__=='__main__':
