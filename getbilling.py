@@ -12,9 +12,14 @@ metric = cloudwatch.Metric('AWS/Billing','EstimatedCharges')
 url = os.environ["WEBHOOK_URL"]
 channel_name = '#test_01'
 
-d = datetime.today() - timedelta(days=1)
-start_time = datetime(d.year, d.month, d.day, 0, 0, 0)
-end_time = datetime(d.year, d.month, d.day, 23, 59, 59)
+d0 = datetime.now() - timedelta(hours=24)
+d1 = datetime.now()
+
+start_time = datetime(d0.year, d0.month, d0.day, d0.hour, 0, 0)
+end_time = datetime(d1.year, d1.month, d1.day, d1.hour, 0, 0)
+
+#print start_time
+#print end_time
 
 response = metric.get_statistics(
     Dimensions=[
@@ -27,13 +32,15 @@ response = metric.get_statistics(
     EndTime=end_time,
     Period=86400,
     Statistics=[
-        'Average'
+        'Maximum',
     ]
     )
 
-bill_average = response['Datapoints'][0]['Average']
+#print response
 
-content = format(round(bill_average,2), '.2f') + 'USD' + ' (Average: from ' + str(start_time) + ' to ' + str(end_time) + ')'
+bill_average = response['Datapoints'][0]['Maximum']
+
+content = format(round(bill_average,2), '.2f') + 'USD' + ' (Max: from ' + str(start_time) + ' to ' + str(end_time) + ')'
 
 payload_dic = {
     "text":content,
