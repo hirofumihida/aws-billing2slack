@@ -10,7 +10,7 @@ cloudwatch = boto3.resource('cloudwatch')
 metric = cloudwatch.Metric('AWS/Billing','EstimatedCharges')
 
 url = os.environ["WEBHOOK_URL"]
-channel_name = '#test_01'
+channel_name = '#billing'
 
 d0 = datetime.now() - timedelta(hours=24)
 d1 = datetime.now()
@@ -38,14 +38,14 @@ response = metric.get_statistics(
 
 #print response
 
-bill_average = response['Datapoints'][0]['Maximum']
+bill_max = response['Datapoints'][0]['Maximum']
 
-content = format(round(bill_average,2), '.2f') + 'USD' + ' (Max: from ' + str(start_time) + ' to ' + str(end_time) + ')'
+content = format(round(bill_max,2), '.2f') + 'USD' + ' (Max: from ' + str(start_time) + ' to ' + str(end_time) + ')'
 
 payload_dic = {
     "text":content,
     "username":'AWS Monthly Billing',
-    "icon_emoji":':dollar:',
+    "icon_emoji":':awscloud:',
     "channel":channel_name,
     }
 
